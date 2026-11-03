@@ -92,3 +92,18 @@ The original attention implementation in `attentions.py` was tested on CPU.
 
 ```bash
 python tests/test_attention.py
+
+## Execution Evidence
+
+The following screenshot demonstrates successful CPU execution of the original MLA attention components.
+
+![MLA Attention Execution Results](docs/images/attention-test.png)
+
+### Verified results
+- Scaled dot-product attention: PASS
+- Attention weight normalization: PASS
+- Multi-head attention with 2 heads: PASS
+- Output tensor validation: PASS
+- All attention tests passed.
+
+**Note:** This demonstrates attention-module execution, not complete FEVER training or full reproduction of the research paper.
