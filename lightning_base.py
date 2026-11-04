@@ -15,10 +15,10 @@ from transformers import (
     AutoModelForSequenceClassification,
 )
 from transformers.optimization import (
-    AdamW,
     get_cosine_schedule_with_warmup,
     get_linear_schedule_with_warmup,
 )
+from torch.optim import AdamW
 from adafactor import Adafactor
 
 warnings.filterwarnings("ignore")
@@ -66,7 +66,7 @@ class BaseTransformer(pl.LightningModule):
     def _feature_file(self, mode):
         return (
             Path(self.hparams.data_dir)
-            / f"cached_{mode}_{self.hparams.pretrained_model_name}_{self.hparams.max_seq_length}"
+            / f"cached_{mode}_{Path(self.hparams.pretrained_model_name).name}_{self.hparams.max_seq_length}"
         )
 
     def init_parameters(self):
@@ -85,7 +85,7 @@ class BaseTransformer(pl.LightningModule):
             num_devices = max(1, self.hparams.gpus)
             effective_batch_size = (
                 self.hparams.train_batch_size
-                * self.hparams.accumulate_grad_batches
+                * (self.hparams.accumulate_grad_batches or 1)
                 * num_devices
             )
             dataset_size = len(self.train_loader.dataset)

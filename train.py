@@ -11,7 +11,6 @@ from argparse import Namespace
 from pathlib import Path
 from torch.utils.data import DataLoader, TensorDataset
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
-from pytorch_lightning.core.decorators import auto_move_data
 from pytorch_lightning.utilities import rank_zero_info
 from lightning_base import BaseTransformer, generic_train
 from modeling_base import BaseModel
@@ -47,7 +46,6 @@ class FactCheckerTransformer(BaseTransformer):
             config=None if model is None else model.config,
         )
 
-    @auto_move_data
     def forward(self, **inputs):
         return self.model(**inputs)
 
@@ -288,7 +286,7 @@ def main():
     ckpt_dirpath.mkdir(parents=True, exist_ok=True)
 
     monitor, mode, ckpt_filename = None, "min", "{epoch}"
-    dev_filepath = Path(args.data_dir) / "dev.jsonl"
+    dev_filepath = Path(args.data_dir) / "dev.tsv"
     if dev_filepath.exists():
         monitor, mode = "val_acc", "max"
         ckpt_filename = "{epoch}-{" + monitor + ":.4f}"
@@ -300,7 +298,7 @@ def main():
             filename=ckpt_filename,
             monitor=monitor,
             mode=mode,
-            save_top_k=-1 if args.save_all_checkpoints else None,
+            save_top_k=-1 if args.save_all_checkpoints else 1,
         )
     )
 
