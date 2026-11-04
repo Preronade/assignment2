@@ -98,3 +98,4 @@ Training completed successfully. The best checkpoint was saved locally at `outpu
 - Training used two epochs and CPU execution only.
 - The reported metrics should not be compared directly with published benchmark results.
 - Model checkpoints and generated feature caches are local artifacts and are not included in the repository.
+![SciFact training curve](docs/images/scifact-training.png)
